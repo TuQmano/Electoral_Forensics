@@ -7,10 +7,15 @@
 
 
 
+# CARGAR PAQUETES NECESARIOS
 
-library(tidyverse) # CARGAR PAQUETE NECESARIO
+library(readxl)
+library(tidyverse) 
 
-aportes <- read_excel("~/Desktop/AportesPrivados.xls") . # LEER BASE DE DATOS
+##########################
+
+
+aportes <- read_excel("~/Desktop/AportesPrivados.xls") # LEER BASE DE DATOS
 
 
 aportes %>% 
