@@ -19,14 +19,14 @@ aportes <- read_excel("~/Desktop/AportesPrivados.xls") # LEER BASE DE DATOS
 
 
 aportes %>% 
-  filter(Eleccion == "Elección Nacional 2017") %>% . ### FILTRAMOS DATOS DE ELECCION 2017
+  filter(Eleccion == "Elección Nacional 2017") %>%  ### FILTRAMOS DATOS DE ELECCION 2017
   filter(Distrito == "BUENOS AIRES") %>%             ### FILTRAMOS DATOS DEL DISTRITO BUENOS AIRES  
   group_by(Agrupacion, TipoAporte) %>%               ###  AGRUPAMOS LOS DATOS POR LISTAS Y TIPO DE APORES
   select(9, 19, 22) %>%                              ### SELECCIONAMOS VARIABLES RELEVANTES
   summarise_all(funs(sum))-> e2017                   ### SUMAMOS APORTES Y GENERAMOS UNA NUEVA BASE DE DATOS (e2017)
 
 
-e2017$ImporteTot <- round(e2017$ImporteTot, digits = 0) . # REDONDEAMOS VALORES
+e2017$ImporteTot <- round(e2017$ImporteTot, digits = 0)  # REDONDEAMOS VALORES
 
 
 # CONVERTIMOS VARIABLES A TIPO "FACTOR"
