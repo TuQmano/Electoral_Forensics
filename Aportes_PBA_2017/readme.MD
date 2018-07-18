@@ -6,4 +6,6 @@ El repositorio incluye los datos en [`.xls`](https://github.com/TuQmano/Electora
 
 ![Plot2](https://github.com/TuQmano/Electoral_Forensics/blob/master/Aportes_PBA_2017/Plot2.png)
 
+![Plot3](https://github.com/TuQmano/Electoral_Forensics/blob/master/Aportes_PBA_2017/Plot3.png)
+
 
