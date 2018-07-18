@@ -1,8 +1,7 @@
-#
 #    Aportes privados de camapaña en la Provincia de Buenos Aires (2017)
 #    TuQmano con datos de la CNE
 #    www.github.com/tuqmano
-#
+#  
 
 
 
@@ -13,7 +12,6 @@ library(readxl)
 library(tidyverse) 
 library(ggalluvial)
 library(ggrepel)
-
 ##########################
 
 
@@ -84,7 +82,8 @@ ggplot(e2017) +
        y = "Importe total (miles de pesos)", 
        caption = "@TuQmano con datos de la CNE - https://www.electoral.gov.ar/financiamiento/aportes-privados.php ") +
   theme_bw()
-  
+
+
 
 #### ALLUVIAL 
 
@@ -118,3 +117,50 @@ ggplot((sankey), aes(y = monto, axis1 = lista, axis2 = aporte)) +
        y = "Importe total (miles de pesos)", 
        caption = "@TuQmano con datos de la CNE - https://www.electoral.gov.ar/financiamiento/aportes-privados.php ") +
   theme_bw()
+  
+
+### SANKEY SUBSET (CAMBIEMOS y UNIDAD CIUDADANA)
+
+sankey2 <- e2017
+
+sankey2 %>% select(Agrupacion, ImporteTot)%>% 
+  group_by(Agrupacion) %>% 
+  mutate(total = sum(ImporteTot)) %>% 
+  select(Agrupacion, total) %>%  
+  distinct()-> sankey3
+  
+
+totalA <- sum(sankey3$total)
+ 
+ sankey3  %>% 
+         mutate(percent = (round(total/sum(totalA), digit=2))*100) -> sankey3
+
+
+
+sankey2 %>% 
+  filter(Agrupacion %in% c("CAMBIEMOS BUENOS AIRES","UNIDAD CIUDADANA")) %>% 
+  filter(!TipoAporte=="ESPECIE")-> sankey2
+
+
+colnames(sankey2) <-  c("lista","aporte","monto")
+
+
+sankey2$monto <- sankey2$monto/1000 # PARA CALCULAR POR "MILES DE PESOS"
+
+
+ggplot((sankey2), aes(y = monto, axis1 = lista, axis2 = aporte)) +
+  geom_alluvium(aes(fill = lista), width = 1/6) +
+  geom_stratum(width = 1/48, fill = "grey",  color = "black") +
+  scale_fill_manual(breaks = c("CAMBIEMOS BUENOS AIRES", "UNIDAD CIUDADANA"), 
+                    values= c("yellow","lightblue"))+
+  geom_text_repel(stat = "stratum", label.strata = TRUE, size = 2.5, color = "black", fontface = "bold")  +
+  scale_x_discrete(limits = c("Lista", "Tipo de Aporte"), expand = c(.05, .05)) +
+  ggtitle("Aportes privados por lista y tipo de aporte") +
+  labs(title = "Aportes privados de campaña (por tipo de aporte)", 
+       subtitle = "Provincia de Buenos Aires - 2017", 
+       fill = "Espacio político", 
+       x = "", 
+       y = "Importe total (miles de pesos)", 
+       caption = "@TuQmano con datos de la CNE - https://www.electoral.gov.ar/financiamiento/aportes-privados.php ") +
+  theme_bw()
+
