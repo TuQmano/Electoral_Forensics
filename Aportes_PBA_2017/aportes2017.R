@@ -11,6 +11,8 @@
 
 library(readxl)
 library(tidyverse) 
+library(ggalluvial)
+library(ggrepel)
 
 ##########################
 
@@ -83,3 +85,32 @@ ggplot(e2017) +
        caption = "@TuQmano con datos de la CNE - https://www.electoral.gov.ar/financiamiento/aportes-privados.php ") +
   theme_bw()
   
+#### ALLUVIAL ####
+
+sankey <- e2017
+
+
+sankey %>% 
+  filter(Agrupacion %in% c("CAMBIEMOS BUENOS AIRES", "FRENTE DE IZQUIERDA Y DE LOS TRABAJADORES",
+                            "FRENTE JUSTICIALISTA","UNIDAD CIUDADANA")) -> sankey
+
+
+colnames(sankey) <-  c("lista","aporte","monto")
+
+ggplot((sankey), aes(y = monto, axis1 = lista, axis2 = aporte)) +
+  geom_alluvium(aes(fill = lista), width = 1/96) +
+  geom_stratum(width = 1/48, fill = "grey",  color = "black") +
+  scale_fill_manual(breaks = c("CAMBIEMOS BUENOS AIRES", "FRENTE DE IZQUIERDA Y DE LOS TRABAJADORES",
+                                 "FRENTE JUSTICIALISTA","UNIDAD CIUDADANA"), 
+                      values= c("yellow","red","blue","lightblue"))+
+  geom_text_repel(stat = "stratum", label.strata = TRUE, size = 2.5, color = "black", fontface = "bold")  +
+  scale_x_discrete(limits = c("Lista", "Tipo de Aporte"), expand = c(.02, .07))+
+  ggtitle("Aportes privados por lista y tipo de aporte") +
+  labs(title = "Aportes privados de campaña (por tipo de aporte)", 
+       subtitle = "Provincia de Buenos Aires - 2017", 
+       fill = "Espacio político", 
+       x = "", 
+       y = "Importe total (miles de pesos)", 
+       caption = "@TuQmano con datos de la CNE - https://www.electoral.gov.ar/financiamiento/aportes-privados.php ") +
+  theme_bw()
+
