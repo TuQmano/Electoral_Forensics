@@ -85,26 +85,31 @@ ggplot(e2017) +
        caption = "@TuQmano con datos de la CNE - https://www.electoral.gov.ar/financiamiento/aportes-privados.php ") +
   theme_bw()
   
-#### ALLUVIAL ####
+
+#### ALLUVIAL 
 
 sankey <- e2017
 
 
 sankey %>% 
   filter(Agrupacion %in% c("CAMBIEMOS BUENOS AIRES", "FRENTE DE IZQUIERDA Y DE LOS TRABAJADORES",
-                            "FRENTE JUSTICIALISTA","UNIDAD CIUDADANA")) -> sankey
+                            "FRENTE JUSTICIALISTA","UNIDAD CIUDADANA", "1 PAIS")) -> sankey
 
 
 colnames(sankey) <-  c("lista","aporte","monto")
 
+
+sankey$monto <- sankey$monto/1000 # PARA CALCULAR POR "MILES DE PESOS"
+
+
 ggplot((sankey), aes(y = monto, axis1 = lista, axis2 = aporte)) +
-  geom_alluvium(aes(fill = lista), width = 1/96) +
+  geom_alluvium(aes(fill = lista), width = 1/6) +
   geom_stratum(width = 1/48, fill = "grey",  color = "black") +
-  scale_fill_manual(breaks = c("CAMBIEMOS BUENOS AIRES", "FRENTE DE IZQUIERDA Y DE LOS TRABAJADORES",
+  scale_fill_manual(breaks = c("1 PAIS","CAMBIEMOS BUENOS AIRES", "FRENTE DE IZQUIERDA Y DE LOS TRABAJADORES",
                                  "FRENTE JUSTICIALISTA","UNIDAD CIUDADANA"), 
-                      values= c("yellow","red","blue","lightblue"))+
+                      values= c("black", "yellow","red","blue","lightblue"))+
   geom_text_repel(stat = "stratum", label.strata = TRUE, size = 2.5, color = "black", fontface = "bold")  +
-  scale_x_discrete(limits = c("Lista", "Tipo de Aporte"), expand = c(.02, .07))+
+  scale_x_discrete(limits = c("Lista", "Tipo de Aporte"), expand = c(.05, .05)) +
   ggtitle("Aportes privados por lista y tipo de aporte") +
   labs(title = "Aportes privados de campaña (por tipo de aporte)", 
        subtitle = "Provincia de Buenos Aires - 2017", 
@@ -113,4 +118,3 @@ ggplot((sankey), aes(y = monto, axis1 = lista, axis2 = aporte)) +
        y = "Importe total (miles de pesos)", 
        caption = "@TuQmano con datos de la CNE - https://www.electoral.gov.ar/financiamiento/aportes-privados.php ") +
   theme_bw()
-
